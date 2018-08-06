@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t pymes_docker .
+docker build -t openbread_docker .

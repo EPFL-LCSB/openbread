@@ -29,7 +29,7 @@ limitations under the License.
 #Example of how the python interface of HSBRD works
 import openbread
 import numpy as np
-#from mpi4py import MPI
+
 
 species = { "S":{"id":0,"diff":300.0,"rad":1e-3,"mass":0.2},
             "P":{"id":1,"diff":300.0,"rad":1e-3,"mass":0.2},
@@ -61,12 +61,13 @@ simulation_space = {"box_size":0.1}
 
 openbread.py_openfpm_init()
 
-sim = openbread.HSBRDSimulation( species,
+sim = openbread.HSBRDSimulation(species,
                                 reactions,
                                 initial_conditions,
                                 crowding,
                                 simulation_space,
                                 1,
-                                True)
+                                True,
+                                100)
 
 results = sim.simulate(1e-9,1e-8,1)

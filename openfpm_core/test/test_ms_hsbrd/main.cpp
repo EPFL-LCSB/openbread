@@ -14,15 +14,15 @@
 #include <cstdlib>
 
 // Particle types and functions
-#include "../ms_hsbrd/particles.hpp"
+#include "../../ms_hsbrd/particles.hpp"
 //Reaction operators
-#include "../ms_hsbrd/reaction.hpp"
+#include "../../ms_hsbrd/reaction.hpp"
 //Collision operatrors
-#include "../ms_hsbrd/collision.hpp"
+#include "../../ms_hsbrd/collision.hpp"
 // Additional operators
-#include "../ms_hsbrd/additional_operators.hpp"
+#include "../../ms_hsbrd/additional_operators.hpp"
 // Logger
-#include "../ms_hsbrd/logger.hpp"
+#include "../../ms_hsbrd/logger.hpp"
 
 // Unit System:
 // 		Concentration	Diffusion 	uni-reactions	bi-reactions 		adsorption rates

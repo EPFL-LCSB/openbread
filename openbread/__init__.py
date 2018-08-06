@@ -25,4 +25,5 @@ limitations under the License.
 
 """
 
-from .openfpm_core import *
+# Import shared libaries
+from openfpm_core import *

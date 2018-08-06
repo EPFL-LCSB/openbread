@@ -4,10 +4,20 @@
 
 
 """
-
+import subprocess
 from setuptools import setup, find_packages
+from distutils.core import Extension
+from distutils.command.build_ext import build_ext as _build_ext
+
+class build_ext(_build_ext):
+    def run(self):
+        subprocess.call(['make', 'clean', '-C', 'openfpm_core'])
+        subprocess.call(['make', '-C', 'openfpm_core'])
+        _build_ext.run(self)
+
 
 version_tag = '0.0.1'
+
 
 setup(name='openbread',
       version=version_tag,
@@ -20,10 +30,13 @@ setup(name='openbread',
                         'scipy',
                         'dill',
                         'salib',],
+
       packages = find_packages(),
       python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
       description='OPRNFPM based Brownian Reaction Dyncamics',
-      keywords=['OPENFPM','agent-based','kinetic','models'],
+      keywords=['OPENFPM',
+                'Brownian Reaction Dyncamics',
+                'agent-based','kinetic','models'],
 
       license='Apache2',
 
@@ -49,4 +62,6 @@ setup(name='openbread',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
       ],
+
+      cmdclass={'build_ext': build_ext},
      )

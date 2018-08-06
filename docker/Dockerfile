@@ -35,7 +35,7 @@ COPY requirements.txt .
 
 USER root
 
-# Add extra src if needed
+# Add extra openfpm_core if needed
 RUN mkdir /src
 COPY src/ /src/
 
@@ -71,7 +71,10 @@ WORKDIR  $HOME/work
 WORKDIR $HOME/work
 USER user
 
+ENV PYTHON_INCLUDE='/usr/local/include/python3.5m'
 
-ENTRYPOINT ["/bin/bash", "-c",  "pip install --user -e /openbread  && $0 $*"]
+
+ENTRYPOINT ["/bin/bash", "-c",  "source /home/user/openfpm_vars \
+                                && pip install --user -e /openbread  && $0 $*"]
 
 CMD /bin/bash

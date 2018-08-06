@@ -1,6 +1,6 @@
 
 
-%module pyhsbrd
+%module openfpm_core
 %include "std_string.i"
 %include "std_map.i"
 %include "std_vector.i"
@@ -23,8 +23,8 @@ namespace std {
     #include <string>
     #include <map>
     #include <cstdlib>
-    #include "pyhsbrd.hpp"
+    #include "openfpm_core.hpp"
 %}
 
-%include "pyhsbrd.hpp"
-%include "pyhsbrd.cpp"
+%include "openfpm_core.hpp"
+%include "openfpm_core.cpp"

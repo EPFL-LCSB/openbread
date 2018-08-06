@@ -26,12 +26,11 @@ limitations under the License.
 """
 
 from collections import namedtuple
-from time import sleep, time
+from time import time
 
-from skimpy.utils import TabDict, iterable_to_tabdict
+from skimpy.utils import iterable_to_tabdict
 
 from .solutions import ParticleModelSolution
-from ..openfpm_core import *
 from ..utils.constants import BOLTZMANN_CONSTANT, AVOGADRO_NUMBER
 
 
