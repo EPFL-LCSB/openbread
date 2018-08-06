@@ -1,0 +1,11 @@
+
+.DStore
+
+*.vtk
+*.html
+*.png
+*.jpg
+*.docx
+
+*.pyc
+*.egg-info
