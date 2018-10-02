@@ -26,7 +26,7 @@ up.
 Quick start
 ===========
 
-~~~python
+```python
 
 from openbread.core import *
 
@@ -84,8 +84,7 @@ result = particle_model.simulate(   dt=1e-9,
                                     is_hardsphere=False,
                                     is_constant_state=False,
                                     t_equlibriate=0.0)
-
-~~~
+```
 
 
 License
