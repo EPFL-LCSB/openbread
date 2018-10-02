@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: pymes
+.. module:: openbread
    :platform: Unix, Windows
-   :synopsis: Python Multiscale Enzyme Simulator
+   :synopsis: OPENFPM based brownian reaction dynamics
 
-.. moduleauthor:: pyMES team
+.. moduleauthor:: openbread team
 
 [---------]
 
@@ -25,6 +25,8 @@ limitations under the License.
 
 """
 
-from .multiscale import *
+
+from .species import *
+from .reactions import *
+from .solutions import *
 from .particle_model import *
-from .species import Species

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 .. module:: openbread
    :platform: Unix, Windows
-   :synopsis: Python Multiscale Enzyme Simulator
+   :synopsis: OPENFPM based brownian reaction dynamics
 
 .. moduleauthor:: openbread team
 
@@ -43,8 +44,6 @@ def calc_collision_success_probability(micro_rate_constant,
    avg_succes_probability = 1.0-exp(-micro_rate_constant/v_eff*delta_t)
 
    return avg_succes_probability
-
-
 
 
 

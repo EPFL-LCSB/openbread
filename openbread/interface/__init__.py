@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: pymes
+.. module:: openbread
    :platform: Unix, Windows
-   :synopsis: Python Multiscale Enzyme Simulator
+   :synopsis: OPENFPM based brownian reaction dynamics
 
-.. moduleauthor:: pyMES team
+.. moduleauthor:: openbread team
 
 [---------]
 

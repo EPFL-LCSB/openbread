@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: pymes
+.. module:: openbread
    :platform: Unix, Windows
-   :synopsis: Python Multiscale Enzyme Simulator
+   :synopsis: OPENFPM based brownian reaction dynamics
 
-.. moduleauthor:: pyMES team
+.. moduleauthor:: openbread team
 
 [---------]
 
@@ -24,6 +24,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 """
+
 from collections import namedtuple
 
 class Species(object):
@@ -33,6 +34,7 @@ class Species(object):
    """
 
    def __init__(self,name,diffusion_constant,collision_radius,mass):
+
       self.name               = name
       self.diffusion_constant = diffusion_constant
       self.collision_radius   = collision_radius

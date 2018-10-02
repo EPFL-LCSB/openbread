@@ -2,7 +2,7 @@
 """
 .. module:: openbread
    :platform: Unix, Windows
-   :synopsis: Python Multiscale Enzyme Simulator
+   :synopsis: OPENFPM based brownian reaction dynamics
 
 .. moduleauthor:: openbread team
 
@@ -26,5 +26,6 @@ limitations under the License.
 """
 
 
-from .units import *
+
+from .constants import *
 from .conversions import *

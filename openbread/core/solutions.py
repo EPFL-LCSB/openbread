@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: pymes
+.. module:: openbread
    :platform: Unix, Windows
-   :synopsis: Python Multiscale Enzyme Simulator
+   :synopsis: OPENFPM based brownian reaction dynamics
 
-.. moduleauthor:: pyMES team
+.. moduleauthor:: openbread team
 
 [---------]
 
@@ -25,7 +25,9 @@ limitations under the License.
 
 """
 
-from skimpy.utils import TabDict,iterable_to_tabdict
+
+from collections import OrderedDict
+
 import numpy as np
 
 from ..utils.constants import AVOGADRO_NUMBER
@@ -37,7 +39,10 @@ class ParticleModelSolution(object):
    result from C++ wrapped data
    """
 
-   def __init__(self,results,reactions,species,volume,delta_t,n_log,is_hardsphere):
+   def __init__(self,results,reactions,species,volume,delta_t,n_log,is_hardsphere=True):
+
+      # Save the raw output
+      self._interface_output = results
 
       delta_t_log = delta_t*n_log
 
@@ -71,14 +76,14 @@ class ParticleModelSolution(object):
             acceptance_dict[acceptance_key] = this_reaction_name
 
 
-      self.species = iterable_to_tabdict([])
+      self.species = OrderedDict([])
       for this_key in results[0]["species"].keys():
          this_species_name = species_dict[this_key]
          self.species[this_species_name] = [result['species'][this_key] \
                                                for result in results ]
 
 
-      self.collisions = iterable_to_tabdict([])
+      self.collisions = OrderedDict([])
       for this_key,this_reaction_name in collison_dict.items():
          self.collisions[this_reaction_name] = []
          for result in results:
@@ -88,12 +93,13 @@ class ParticleModelSolution(object):
                self.collisions[this_reaction_name].append(0.0)
 
 
-      self.acceptance = iterable_to_tabdict([])
+      self.acceptance = OrderedDict([])
       for this_key,this_reaction_name in acceptance_dict.items():
         self.acceptance[this_reaction_name] = []
         for result in results:
            try:
-             self.acceptance[this_reaction_name].append(result['acceptance'][this_key])
+             self.acceptance[this_reaction_name].append(
+                result['acceptance'][this_key]/float(n_log))
            except IndexError:
              self.acceptance[this_reaction_name].append(0.0)
 
@@ -101,8 +107,8 @@ class ParticleModelSolution(object):
       self.time = [result['time'][0] for result in results ]
 
       # Effective macroscopic rate constans
-      self.effective_rate_constants = iterable_to_tabdict([])
-      self.error_effective_rate_constants = iterable_to_tabdict([])
+      self.effective_rate_constants = OrderedDict([])
+      self.error_effective_rate_constants = OrderedDict([])
       # Calculate the effective rate constants
 
       for this_reaction_name, reaction_dict in reactions.items():
@@ -136,7 +142,7 @@ class ParticleModelSolution(object):
                                                             delta_t,
                                                             is_hardsphere)
 
-            probablity_estimator =   mean_collisions/possible_collisions
+            probablity_estimator = mean_collisions/possible_collisions
 
             scaling_factor = avg_succes/delta_t_log*volume*AVOGADRO_NUMBER
 
@@ -162,7 +168,7 @@ class ParticleModelSolution(object):
             n_msrmts = round(len(self.acceptance[this_reaction_name])*0.1)
 
             avg_succes =  np.mean(self.acceptance[this_reaction_name][n_msrmts:])
-            this_effective_rate_constant = micro_rate_constant*avg_succes/n_log
+            this_effective_rate_constant = micro_rate_constant*avg_succes
 
             self.effective_rate_constants[this_reaction_name] = \
                                                    this_effective_rate_constant
