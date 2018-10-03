@@ -15,12 +15,12 @@ branches:
 before_install:
  - pip install pytest-cov
  - docker pull danielweilandt/openbread_docker
- 
+
 script:
  - docker run --rm \
         -v $(pwd)/work:/home/user/work \
         -v $(pwd)/..:/openbread \
-        danielweilandt/openbread_docker 	\
+        openbread_docker 	\
         py.test --cov=./ /openbread/test
 
 after_success:
