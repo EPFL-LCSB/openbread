@@ -21,7 +21,7 @@ script:
         -v $(pwd)/work:/home/user/work \
         -v $(pwd)/..:/openbread \
         openbread_docker 	\
-        py.test --cov=./ /openbread/test
+        bash -c "py.test --cov=./ /openbread/test"
 
 after_success:
 - pip install codecov; codecov;
