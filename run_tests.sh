@@ -1,6 +1,6 @@
 #!/bin/sh
 cd docker
-chmod +x *.sh
+chmod -R folder_name 755
 docker run --rm \
         -v $(pwd)/work:/home/user/work \
         -v $(pwd)/..:/openbread \
