@@ -1,6 +1,6 @@
 #!/bin/sh
 cd docker
-chown -R +X .
+chown -R u+X .
 docker run --rm \
         -v $(pwd)/work:/home/user/work \
         -v $(pwd)/..:/openbread \
