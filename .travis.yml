@@ -17,8 +17,7 @@ before_install:
  - docker pull danielweilandt/openbread_docker
 
 script:
-# - bash ./run_tests.sh
- - bash -c "echo hello"
+ - bash ./docker/run_tests.sh
 
 after_success:
 - pip install codecov; codecov;

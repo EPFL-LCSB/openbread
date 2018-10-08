@@ -1,5 +1,4 @@
 #!/bin/sh
-cd docker
 chmod -R u+X .
 docker run --rm \
         -v $(pwd)/work:/home/user/work \
