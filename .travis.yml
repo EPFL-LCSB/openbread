@@ -18,7 +18,7 @@ before_install:
  - docker build -t openbread_docker_ci -f docker/Dockerfile.ci .
 
 script:
- - bash /openbread/docker/run_tests.sh
+ - bash ./docker/run_tests.sh
 
 after_success:
 - pip install codecov; codecov;
