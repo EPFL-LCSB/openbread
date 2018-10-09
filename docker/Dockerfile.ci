@@ -1,0 +1,8 @@
+FROM danielweilandt/openbread_docker:latest
+ENTRYPOINT []
+USER root
+RUN mkdir /openbread
+COPY . /openbread
+USER user
+RUN pip install --user /openbread
+CMD /bin/bash
