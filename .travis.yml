@@ -13,7 +13,6 @@ branches:
  - ci
 
 before_install:
- - pip install pytest-cov
  - docker pull danielweilandt/openbread_docker
  - docker build -t openbread_docker_ci -f docker/Dockerfile.ci .
 
