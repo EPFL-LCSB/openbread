@@ -1,5 +1,5 @@
 openbread
-=====
+=========
 
 A python 3 implementation of OPENFPM based brownian reaction dynamics.
 
@@ -14,13 +14,28 @@ This module requires `OPENFPM http://openfpm.mpi-cbg.de/`_ to work properly.
 Container-based install
 -----------------------
 
-We recommend to use this package inside of the provided container. The
-|docker|_
-subfolder has all the necessary information and source files to set it
-up.
+We recommend to use this package inside of the provided DOCKER container. This requieres an installation of Docker (R)
+(Community editions sufficient) that is freely available `here https://www.docker.com/`_
+
+See |docker|_ page for the setup and use of the container.
 
 .. |docker| replace:: ``docker/``
 .. _docker: https://github.com/EPFL-LCSB/openbread/tree/master/docker
+
+To
+
+Source-based install
+-----------------------
+
+For a source based install a working installation of |OPENFPM|_ is required.
+And the variables of the correct include and library paths are added using:
+
+.. code:: bash
+    source /openfpm_install_dir/openfpm_vars
+
+
+.. |OPENFPM| replace:: ``openfpm``
+.. _OPENFPM: http://openfpm.mpi-cbg.de/install_from_source#intro-wrapper
 
 
 Quick start
@@ -90,4 +105,5 @@ Quick start
 License
 ========
 
-The software in this repository is put under an APACHE-2.0 licensing scheme - please see the `LICENSE <https://github.com/EPFL-LCSB/openbread/blob/master/LICENSE.txt>`_ file for more details.
+The software in this repository is put under an APACHE-2.0 licensing scheme - please see the
+`LICENSE <https://github.com/EPFL-LCSB/openbread/blob/master/LICENSE.txt>`_ file for more details.
