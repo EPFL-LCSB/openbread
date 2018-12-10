@@ -22,13 +22,26 @@ See |docker|_ page for the setup and use of the container.
 .. |docker| replace:: ``docker/``
 .. _docker: https://github.com/EPFL-LCSB/openbread/tree/master/docker
 
-To
 
 Source-based install
 -----------------------
 
-For a source based install a working installation of |OPENFPM|_ is required.
-And the variables of the correct include and library paths are added using:
+For a source based it is necessary to install |OPENFPM|_with CXXFLAGS=-fPIC CFLAGS=-fPIC.
+We recommend to use our fork of the openfpm package that is using openmpi 3.0.0 as there it includes
+a bug fix for shared libraries:
+
+.. code:: bash
+    git clone https://github.com/weilandtd/openfpm_pdata.git
+
+    cd openfpm_pdata
+
+     ./install -s -i "/installation/directory" \
+               -c "--prefix=/dependency/director.  CXXFLAGS=-fPIC  CFLAGS=-fPIC"
+
+
+make install
+
+Note that correct include and library paths need to be added:
 
 .. code:: bash
     source /openfpm_install_dir/openfpm_vars
