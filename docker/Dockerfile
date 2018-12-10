@@ -35,9 +35,6 @@ COPY requirements.txt .
 
 USER root
 
-# Add extra openfpm_core if needed
-RUN mkdir /src
-COPY src/ /src/
 
 # Make an alias
 RUN ln -s /usr/bin/python3 python

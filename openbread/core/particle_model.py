@@ -164,7 +164,8 @@ class ParticleModel(object):
                             self.simulation_space,
                             random_seed,
                             is_hardsphere,
-                            n_sample)
+                            n_sample,
+                            is_constant_state)
 
       # Depedneted on the simulation equlibriaten
       if not is_constant_state:

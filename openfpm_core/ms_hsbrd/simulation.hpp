@@ -67,6 +67,7 @@ public:
     Vcluster *virtual_cluster;
 
     bool is_hardsphere;
+    bool is_reactive;
 
     CellList<3, double, Mem_fast, shift<3, double>,
                 openfpm::vector<long unsigned int> > nearest_neighbours;
@@ -95,7 +96,8 @@ public:
                 SimulationSpace *in_simulation_space,
                 int random_seed,
                 bool _is_hardspher,
-                int _n_sample_1st_order);
+                int _n_sample_1st_order,
+                bool _is_reactive);
 
 
     virtual void step(double delta_t, bool is_reactive );
@@ -118,7 +120,8 @@ Simulator::Simulator( SpeciesList *in_species_list,
                       SimulationSpace *in_simulation_space,
                       int random_seed,
                       bool _is_hardsphere = true,
-                      int _n_sample_1st_order = 10)
+                      int  _n_sample_1st_order = 10,
+                      bool _is_reactive = true)
 {
 
     species_list = in_species_list;
@@ -128,6 +131,7 @@ Simulator::Simulator( SpeciesList *in_species_list,
     simulation_space = in_simulation_space;
 
     is_hardsphere = _is_hardsphere;
+    is_reactive = _is_reactive;
     n_samples_1st_order = _n_sample_1st_order;
 
     cutoff_radius = crowding->max_r*2.0;
@@ -197,7 +201,7 @@ Simulator::Simulator( SpeciesList *in_species_list,
 
 
 
-void Simulator::step(double delta_t, bool is_reactive = true)
+void Simulator::step(double delta_t, bool _is_reactive = true)
 {
     // Map particles and get ghosts
     particle_list->map();
@@ -213,7 +217,7 @@ void Simulator::step(double delta_t, bool is_reactive = true)
         // Reset the collision flg for both particles
         particle_list->getProp<collision_flg>(particle.getKey()) = false;
         // First order reaction on the particles
-        if (is_reactive)
+        if (_is_reactive)
         {
             reactions->react_first_order(*particle_list,
                                          nearest_neighbours,
@@ -233,6 +237,15 @@ void Simulator::step(double delta_t, bool is_reactive = true)
         ++it3;
     }
 
+    if (_is_reactive)
+    {
+        reactions->react_zeroth_order(*particle_list,
+                                      *virtual_cluster,
+                                      nearest_neighbours,
+                                      cutoff_radius,
+                                      delta_t);
+    }
+
     // Update the verlet list
     particle_list->map();
     particle_list->template ghost_get<>();
@@ -246,7 +259,7 @@ void Simulator::step(double delta_t, bool is_reactive = true)
                              random_number_generator,
                              uniform_distributed_random_number,
                              is_hardsphere,
-                             is_reactive);
+                             _is_reactive);
     // Overwrite ghosts and update
 	particle_list->ghost_put<replace_if_collsion_>();
     particle_list->map();
@@ -254,7 +267,7 @@ void Simulator::step(double delta_t, bool is_reactive = true)
     particle_list->updateCellListSym(nearest_neighbours);
     reactions->update_n_particles(*particle_list,
                                   *virtual_cluster);
-    if (is_reactive)
+    if (_is_reactive)
     {
         reactions->react_zeroth_order(*particle_list,
                                       *virtual_cluster,
@@ -320,7 +333,7 @@ td_results Simulator::simulate( double delta_t,
     for (size_t i = 1; i < t_max/delta_t ; i++)
     {
         time = i*delta_t;
-        step(delta_t);
+        step(delta_t,is_reactive);
 
         // Reorder particle list for chache friendlyness
         if (i % int(5e2) == 0)

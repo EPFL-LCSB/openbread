@@ -36,8 +36,8 @@ public:
                         td_simulation_space_warpper simulation_space,
                         int random_seeed,
                         bool is_hardsphere,
-                        int n_sample_1st_order
-
+                        int n_sample_1st_order,
+                        bool is_reactive
                     );
 
     ~HSBRDSimulation();

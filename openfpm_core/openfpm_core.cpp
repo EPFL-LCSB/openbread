@@ -13,7 +13,8 @@ HSBRDSimulation::HSBRDSimulation(   td_species_wrapper species,
                                     td_simulation_space_warpper simulation_space,
                                     int random_seed = 1,
                                     bool is_hardsphere = true,
-                                    int n_sample_1st_order = 100
+                                    int n_sample_1st_order = 100,
+                                    bool is_reactive = true
                                 )
 {
 
@@ -32,7 +33,8 @@ HSBRDSimulation::HSBRDSimulation(   td_species_wrapper species,
                                 _simulation_space,
                                 random_seed,
                                 is_hardsphere,
-                                n_sample_1st_order);
+                                n_sample_1st_order,
+                                is_reactive);
 }
 
 
