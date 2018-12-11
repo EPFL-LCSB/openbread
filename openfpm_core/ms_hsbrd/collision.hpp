@@ -290,7 +290,8 @@ struct Collisions
 					//std::cout << "Coll distance (skip) " << coll_it->dist << std::endl;
 					//std::cout << "Coll distance (skip) " << q_key << std::endl;
 					//std::cout << "Coll distance (skip) " << p_key << std::endl;
-					++coll_it;
+					particle_list->ghost_get<>();
+					++coll_it;  
 					continue;
 				}
 
@@ -323,6 +324,7 @@ struct Collisions
 				succes = hardSphereCollision(_particle_list,q_key,p_key,_dt);
 			}
 
+            particle_list->ghost_get<>();
 			++coll_it;
 		}
 
