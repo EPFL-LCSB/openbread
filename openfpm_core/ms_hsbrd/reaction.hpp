@@ -1152,7 +1152,7 @@ struct Reactions
 																	CellList & _NN,
 																	double _r_gskin,
 																	double _dt,
-																	std::mt19937 & _mt_rng,)
+																	std::mt19937 & _mt_rng)
 	{
 
 		if( zero_react_list.empty() )
