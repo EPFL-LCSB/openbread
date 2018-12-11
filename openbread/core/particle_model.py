@@ -138,12 +138,12 @@ class ParticleModel(object):
 
           initial_conditions_scaled[this_species] = this_species_number
 
-          this_species_id = self._species[this_species]["id"]
+          this_species_obj = self.species[this_species]
 
           if is_constant_state:
               # Add reactions to keep state constant
               self.reactions[this_species+"const"] = Reaction(this_species+"const",
-                                                              {this_species:1},
+                                                              {this_species_obj:1},
                                                               this_species_number,
                                                               constant_particle_rxn=True)
 
