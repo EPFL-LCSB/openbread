@@ -55,11 +55,3 @@ class Reaction:
     def products(self):
         return [sp for sp, stoich in self.stoichiometry.items()
                           for i in range(abs(stoich)) if stoich > 0 ]
-
-    def __repr__(self):
-        reactants = ""
-        products = ""
-
-        # ToDo nice string repr
-
-        return "{} --> {}".format(reactants,products)
