@@ -243,7 +243,8 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
                                       *virtual_cluster,
                                       nearest_neighbours,
                                       cutoff_radius,
-                                      delta_t);
+                                      delta_t,
+                                      random_number_generator);
     }
 
     // Update the verlet list
@@ -273,7 +274,8 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
                                       *virtual_cluster,
                                       nearest_neighbours,
                                       cutoff_radius,
-                                      delta_t);
+                                      delta_t,
+                                      random_number_generator);
     }
 
     openfpm::vector<size_t> particles_to_delete;

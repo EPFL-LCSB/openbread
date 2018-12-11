@@ -159,7 +159,8 @@ struct ZerothOrderReaction
 													std::map<int,size_t> & _n_particles,
 													std::map<int,int> & _delta_n_particles,
 													std::map< int, Species* > _species_list,
-													double _dt)
+													double _dt,
+													std::mt19937 & _mt_rng)
 	{
 
 		if(N_p != -1) // Constant concetration >  number of particles
@@ -322,6 +323,7 @@ struct ZerothOrderReaction
 				// Create the partilce at a position
 
 			}
+
 			// Remove delta_n_t particles
 			else if  (delta_n_t < 0)
 			{
@@ -337,25 +339,28 @@ struct ZerothOrderReaction
 				std::vector<size_t> particles_to_rm;
 
 				// Draw a random particle from the processors domain
+                size_t particle_list_size = _particle_list.size_local();
 
-				// This needs to change!!!
-				auto it_dom = _particle_list.getDomainIterator();
+                std::uniform_int_distribution<size_t> distribution(0,particle_list_size);
 
 				// find particles with the correct id
 				while( -rm_particle > delta_n_t && it_dom.isNext() )
 				{
+                    // Draw a random particle from the domain
+					size_t _rand_particle_key = distribution(_mt_rng) ;
 
-					auto _rand_particle = it_dom.get();
+					// Is the particle already in the list?
+					bool found = (std::find(particles_to_rm.begin(), particles_to_rm.end(), my_var) != particles_to_rm.end());
 
 					// Check if it has the corect id
-					if(_particle_list.getProp<id>(_rand_particle.getKey()) == product)
+					if(_particle_list.getProp<id>(_rand_particle_key) == product and not found)
 					{
 						rm_particle_loc ++;
 						rm_particle = rm_particle_loc;
 						_v_cl.sum(rm_particle);
 						_v_cl.execute();
 
-						particles_to_rm.push_back(_rand_particle.getKey());
+						particles_to_rm.push_back(_rand_particle_key);
 
 					}
 					else
@@ -1147,6 +1152,7 @@ struct Reactions
 	inline void react_zeroth_order(	td_particle_list & _particle_list,
 																	Vcluster&  _v_cl,
 																	CellList & _NN,
+																	std::mt19937 & _mt_rng,
 																	double _r_gskin,
 																	double _dt)
 	{
@@ -1172,7 +1178,7 @@ struct Reactions
 				//update neigbours
 				_particle_list.updateCellListSym(_NN);
 				// Attempt the reaction
-				success = reaction(_particle_list,_v_cl,_NN,n_particles,delta_n_particles,species_map,_dt);
+				success = reaction(_particle_list,_v_cl,_NN,n_particles,delta_n_particles,species_map,_dt, _mt_rng,);
 
 
 			}
