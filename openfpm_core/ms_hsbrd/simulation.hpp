@@ -267,7 +267,7 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
     particle_list->updateCellListSym(nearest_neighbours);
     reactions->update_n_particles(*particle_list,
                                   *virtual_cluster);
-    if (_is_reactive and is_constant)
+    if (_is_reactive)
     {
         reactions->react_zeroth_order(*particle_list,
                                       *virtual_cluster,
