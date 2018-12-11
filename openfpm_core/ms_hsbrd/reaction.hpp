@@ -344,13 +344,13 @@ struct ZerothOrderReaction
                 std::uniform_int_distribution<size_t> distribution(0,particle_list_size);
 
 				// find particles with the correct id
-				while( -rm_particle > delta_n_t && it_dom.isNext() )
+				while( -rm_particle > delta_n_t)
 				{
                     // Draw a random particle from the domain
 					size_t _rand_particle_key = distribution(_mt_rng) ;
 
 					// Is the particle already in the list?
-					bool found = (std::find(particles_to_rm.begin(), particles_to_rm.end(), my_var) != particles_to_rm.end());
+					bool found = (std::find(particles_to_rm.begin(), particles_to_rm.end(), _rand_particle_key) != particles_to_rm.end());
 
 					// Check if it has the corect id
 					if(_particle_list.getProp<id>(_rand_particle_key) == product and not found)
@@ -369,8 +369,6 @@ struct ZerothOrderReaction
 						_v_cl.sum(rm_particle);
 						_v_cl.execute();
 					}
-
-					++it_dom;
 				}
 
 				//std::cout << "DELTE N " << rm_particle_loc << std::endl;
@@ -1152,9 +1150,9 @@ struct Reactions
 	inline void react_zeroth_order(	td_particle_list & _particle_list,
 																	Vcluster&  _v_cl,
 																	CellList & _NN,
-																	std::mt19937 & _mt_rng,
 																	double _r_gskin,
-																	double _dt)
+																	double _dt,
+																	std::mt19937 & _mt_rng,)
 	{
 
 		if( zero_react_list.empty() )
@@ -1178,7 +1176,7 @@ struct Reactions
 				//update neigbours
 				_particle_list.updateCellListSym(_NN);
 				// Attempt the reaction
-				success = reaction(_particle_list,_v_cl,_NN,n_particles,delta_n_particles,species_map,_dt, _mt_rng,);
+				success = reaction(_particle_list,_v_cl,_NN,n_particles,delta_n_particles,species_map,_dt, _mt_rng);
 
 
 			}
