@@ -37,7 +37,7 @@ public:
                         int random_seeed,
                         bool is_hardsphere,
                         int n_sample_1st_order,
-                        bool is_reactive
+                        bool is_constant
                     );
 
     ~HSBRDSimulation();

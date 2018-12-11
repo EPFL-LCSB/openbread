@@ -67,7 +67,7 @@ public:
     Vcluster *virtual_cluster;
 
     bool is_hardsphere;
-    bool is_reactive;
+    bool is_constant;
 
     CellList<3, double, Mem_fast, shift<3, double>,
                 openfpm::vector<long unsigned int> > nearest_neighbours;
@@ -97,7 +97,7 @@ public:
                 int random_seed,
                 bool _is_hardspher,
                 int _n_sample_1st_order,
-                bool _is_reactive);
+                bool _is_constant);
 
 
     virtual void step(double delta_t, bool is_reactive );
@@ -121,7 +121,7 @@ Simulator::Simulator( SpeciesList *in_species_list,
                       int random_seed,
                       bool _is_hardsphere = true,
                       int  _n_sample_1st_order = 10,
-                      bool _is_reactive = true)
+                      bool _is_constant = true)
 {
 
     species_list = in_species_list;
@@ -131,7 +131,7 @@ Simulator::Simulator( SpeciesList *in_species_list,
     simulation_space = in_simulation_space;
 
     is_hardsphere = _is_hardsphere;
-    is_reactive = _is_reactive;
+    is_constant = _is_constant;
     n_samples_1st_order = _n_sample_1st_order;
 
     cutoff_radius = crowding->max_r*2.0;
@@ -237,7 +237,7 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
         ++it3;
     }
 
-    if (_is_reactive)
+    if (_is_reactive and is_constant)
     {
         reactions->react_zeroth_order(*particle_list,
                                       *virtual_cluster,
@@ -267,7 +267,7 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
     particle_list->updateCellListSym(nearest_neighbours);
     reactions->update_n_particles(*particle_list,
                                   *virtual_cluster);
-    if (_is_reactive)
+    if (_is_reactive and is_constant)
     {
         reactions->react_zeroth_order(*particle_list,
                                       *virtual_cluster,
@@ -333,7 +333,7 @@ td_results Simulator::simulate( double delta_t,
     for (size_t i = 1; i < t_max/delta_t ; i++)
     {
         time = i*delta_t;
-        step(delta_t,is_reactive);
+        step(delta_t,true);
 
         // Reorder particle list for chache friendlyness
         if (i % int(5e2) == 0)
