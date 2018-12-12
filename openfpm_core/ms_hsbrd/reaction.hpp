@@ -49,7 +49,8 @@ inline bool test_collision_reacions(td_particle_list  & _particle_list,
 				   		double _radius)
 {
 
-	auto Np = _NN.template getNNIterator<NO_CHECK>(_NN.getCell(_particle_list.getPos(_p_key)));
+	auto Np = _NN.template getNNIterator<NO_CHECK>(_p_key);
+
 	// Postion of the hypothetical particle to be checked
 
 	Point<3,double> xp = _postion;
