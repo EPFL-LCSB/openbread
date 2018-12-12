@@ -337,38 +337,42 @@ struct ZerothOrderReaction
 
 				// Particles to remove
 				std::vector<size_t> particles_to_rm;
+				
+				//Create a product list
+				auto it_dom = _particle_list.getDomainIterator();
+				std::vector<size_t> product_list;
+				while(it_dom.isNext() )
+				  {
+				    auto p = it_dom.get();
+				    if (_particle_list.getProp<id>(p.getKey()) == product)
+				      {
+					product_list.push_back(p.getKey());
+				      }
+				    ++it_dom;
+				  }
 
-				// Draw a random particle from the processors domain
-                size_t particle_list_size = _particle_list.size_local();
+				//Shuffle vector
+				std::shuffle(std::begin(product_list), std::end(product_list), _mt_rng);
+				auto itv = product_list.begin();
 
-                std::uniform_int_distribution<size_t> distribution(0,particle_list_size);
-
-				// find particles with the correct id
-				while( -rm_particle > delta_n_t)
+				//Draw random particles from the product list
+				while( -rm_particle > delta_n_t and itv != product_list.end())
 				{
-                    // Draw a random particle from the domain
-					size_t _rand_particle_key = distribution(_mt_rng) ;
+				        // Get particle key
+					size_t _rand_particle_key = *itv;
+				
+					//std::cout << "Particle key " << _rand_particle_key << std::endl;
 
-					// Is the particle already in the list?
-					bool found = (std::find(particles_to_rm.begin(), particles_to_rm.end(), _rand_particle_key) != particles_to_rm.end());
+					// Add particle to the remove list
+					rm_particle_loc ++;
+					rm_particle = rm_particle_loc;
+					_v_cl.sum(rm_particle);
+					_v_cl.execute();
 
-					// Check if it has the corect id
-					if(_particle_list.getProp<id>(_rand_particle_key) == product and not found)
-					{
-						rm_particle_loc ++;
-						rm_particle = rm_particle_loc;
-						_v_cl.sum(rm_particle);
-						_v_cl.execute();
+					particles_to_rm.push_back(_rand_particle_key);
 
-						particles_to_rm.push_back(_rand_particle_key);
-
-					}
-					else
-					{
-						rm_particle = rm_particle_loc;
-						_v_cl.sum(rm_particle);
-						_v_cl.execute();
-					}
+					itv++;
+				       
 				}
 
 				//std::cout << "DELTE N " << rm_particle_loc << std::endl;
