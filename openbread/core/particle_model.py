@@ -128,7 +128,7 @@ class ParticleModel(object):
 
       """
 
-      simulation_id =  "pymes_call_" + str(int(time()*1e24)+random_seed)
+      simulation_id =  "pymes_call_" + str(int(time()*1e24)*100+random_seed)
       py_openfpm_init(simulation_id)
 
       initial_conditions_scaled = {}

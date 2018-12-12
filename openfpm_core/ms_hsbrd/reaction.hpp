@@ -45,15 +45,15 @@ template<typename CellList>
 inline bool test_collision_reacions(td_particle_list  & _particle_list,
 				   		CellList & _NN,
 				   		size_t _p_key,
-				   		Point<3,double> _postion,
+				   		Point<3,double> _position,
 				   		double _radius)
 {
 
-	auto Np = _NN.template getNNIterator<NO_CHECK>(_p_key);
+       auto Np = _NN.template getNNIterator<NO_CHECK>(_NN.getCell(_position));
 
 	// Postion of the hypothetical particle to be checked
 
-	Point<3,double> xp = _postion;
+	Point<3,double> xp = _position;
 
 	// Radius of the particle to be cheked
 	double r_p = _radius;
@@ -81,14 +81,11 @@ inline bool test_collision_reacions(td_particle_list  & _particle_list,
 		double t_test = (r_q + r_p)*(r_q + r_p);
 
 		// Test for collsions or if the particle is deleted
-		if (rn > t_test or _particle_list.getProp<id>(q_key) < 0 ){++Np; continue;} // No Collision
-
+		if (rn > t_test or _particle_list.getProp<id>(q_key) < 0 )
+		  {++Np; continue;} // No Collision
+		else 
 		// A collision occured
-		return true;
-
-		// next neighbourgh
-		++Np;
-
+		  {return true;}
 	}
 	// No collsion occured
 	return false;
