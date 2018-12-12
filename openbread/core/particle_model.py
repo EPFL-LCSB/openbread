@@ -34,7 +34,7 @@ from .reactions import Reaction
 from .solutions import ParticleModelSolution
 from ..utils.tabdict import  iterable_to_tabdict, TabDict
 from ..utils.constants import BOLTZMANN_CONSTANT, AVOGADRO_NUMBER
-
+from ..utils.conversions import match_reaction_rate
 
 class ParticleModel(object):
    """
@@ -84,10 +84,12 @@ class ParticleModel(object):
 
    @property
    def _reactions(self):
+       
        return {rxn.name:{"products": [self._species[p.name]["id"] for p in rxn.products],
                          "educts": [self._species[p.name]["id"] for p in rxn.educts],
-                         "rates": [rxn.rate_constant,] if not rxn.constant_particle_rxn
-                                            else [0.,rxn.rate_constant] }
+                         "rates": [match_reaction_rate(rxn.rate_constant, rxn.educts[0]+rxn.educts[1] ),] if len(rxn.educts)==2
+                                  else [rxn.rate_constant,] if not rxn.constant_particle_rxn 
+                                  else [0.,rxn.rate_constant] }
                for rxn in self.reactions.values()}
 
    @property
