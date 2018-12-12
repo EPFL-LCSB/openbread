@@ -207,35 +207,54 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
     particle_list->map();
     particle_list->template ghost_get<>();
 
-	auto it3 = particle_list->getDomainIterator();
-
-    // Propagate the particles
     //std::cout << "Propagate particles "  <<   v_cl.getProcessUnitID()  << std::endl;
-    while (it3.isNext())
-    {
-        auto particle = it3.get();
-        // Reset the collision flg for both particles
-        particle_list->getProp<collision_flg>(particle.getKey()) = false;
-        // First order reaction on the particles
-        if (_is_reactive)
-        {
-            reactions->react_first_order(*particle_list,
-                                         nearest_neighbours,
-                                         particle.getKey(),
-                                         delta_t,
-                                         random_number_generator,
-                                         uniform_distributed_random_number,
-                                         n_samples_1st_order);
+    // React forst order 
+    if (_is_reactive)
+    {  
+      auto it3 = particle_list->getDomainIterator();
+
+      while (it3.isNext())
+	{
+	  auto particle = it3.get();
+	  // Reset the collision flg for both particles
+	  // First order reaction on the particles
+	  reactions->react_first_order(*particle_list,
+				       nearest_neighbours,
+				       particle.getKey(),
+				       delta_t,
+				       random_number_generator,
+				       uniform_distributed_random_number,
+				       n_samples_1st_order);
         }
 
-        // Propagate particles
-        propagate_particles(*particle_list,
+        ++it3;
+    }
+    
+    particle_list->map();
+    particle_list->template ghost_get<>();
+    particle_list->updateCellListSym(nearest_neighbours);
+
+    // Propagate the particles
+    auto it1 = particle_list->getDomainIterator();
+    
+    while(it1.isNext())
+      {
+	
+	auto particle = it1.get();
+
+        particle_list->getProp<collision_flg>(particle.getKey()) = false;
+
+	propagate_particles(*particle_list,
                             particle.getKey(),
                             delta_t,
                             random_number_generator,
                             normal_distributed_random_number);
-        ++it3;
-    }
+        ++it1;
+
+      }
+
+
+
 
     if (_is_reactive and is_constant)
     {

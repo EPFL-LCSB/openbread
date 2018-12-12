@@ -49,7 +49,10 @@ inline bool test_collision_reacions(td_particle_list  & _particle_list,
 				   		double _radius)
 {
 
-       auto Np = _NN.template getNNIterator<NO_CHECK>(_NN.getCell(_position));
+  //std::cout << "Test 1 " << std::endl;
+        auto Np = _NN.template getNNIterator<SAFE>(_NN.getCell(_position));
+
+
 
 	// Postion of the hypothetical particle to be checked
 
@@ -58,13 +61,15 @@ inline bool test_collision_reacions(td_particle_list  & _particle_list,
 	// Radius of the particle to be cheked
 	double r_p = _radius;
 
+
+
 	while (Np.isNext())
 	{
 		// ... q
 		auto q_key = Np.get();
 
 		// skip the particle p
-		if (q_key == _p_key)	{++Np; continue;};
+		if (q_key == _p_key) {++Np; continue;};
 
 		// Get the position of q
 		Point<3,double> xq = _particle_list.getPos(q_key);
@@ -84,9 +89,11 @@ inline bool test_collision_reacions(td_particle_list  & _particle_list,
 		if (rn > t_test or _particle_list.getProp<id>(q_key) < 0 )
 		  {++Np; continue;} // No Collision
 		else 
+
 		// A collision occured
 		  {return true;}
 	}
+
 	// No collsion occured
 	return false;
 }
@@ -712,13 +719,13 @@ struct FirstOrderReaction
 
 				Point<3,double> pos_1 = pos_0 +  u_vec*(mass_2/(mass_2 + mass_1) * sigma);
 				double radius_1 = _species_list[products[0]]->radius;
-				// Check collsion
-				if (test_collision_reacions(_particle_list, _NN, _p_key, pos_1, radius_1)){return false;}
-
+				
 				Point<3,double> pos_2 = pos_0 - u_vec * (mass_1/(mass_1+mass_2)) * sigma;
 				double radius_2 = _species_list[products[1]]->radius;
+
 				// Check collsion
-				if (test_collision_reacions(_particle_list, _NN, _p_key, pos_2, radius_2)){return false;}
+				if (test_collision_reacions(_particle_list, _NN, _p_key, pos_1, radius_1) or 
+				    test_collision_reacions(_particle_list, _NN, _p_key, pos_2, radius_2)){return false;}
 
 				return true;
 			}
