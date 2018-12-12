@@ -50,9 +50,7 @@ inline bool test_collision_reacions(td_particle_list  & _particle_list,
 {
 
   //std::cout << "Test 1 " << std::endl;
-        auto Np = _NN.template getNNIterator<SAFE>(_NN.getCell(_position));
-
-
+        auto Np = _NN.template getNNIterator<NO_CHECK>(_NN.getCell(_position));
 
 	// Postion of the hypothetical particle to be checked
 

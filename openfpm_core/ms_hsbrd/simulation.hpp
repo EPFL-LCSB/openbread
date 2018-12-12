@@ -225,14 +225,15 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
 				       random_number_generator,
 				       uniform_distributed_random_number,
 				       n_samples_1st_order);
-        }
+        
 
         ++it3;
+        }
     }
     
     particle_list->map();
-    particle_list->template ghost_get<>();
-    particle_list->updateCellListSym(nearest_neighbours);
+    //particle_list->template ghost_get<>();
+    //particle_list->updateCellListSym(nearest_neighbours);
 
     // Propagate the particles
     auto it1 = particle_list->getDomainIterator();
