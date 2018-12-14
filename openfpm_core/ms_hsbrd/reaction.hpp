@@ -30,11 +30,13 @@
 #define N_RANDOM_POINT 1024
 
 
+
 #ifndef REACTION_H
 #define REACTION_H
 
-//Template
 
+//Template
+constexpr int DELETE_ID = INT_MIN/3;
 
 // Helper functions
 
@@ -422,7 +424,7 @@ struct ZerothOrderReaction
 				for (int i=0 ; i < rm_particle_loc ; i++)
 				{
 					// Mark particles for deletion
-					_particle_list.getProp<id>(particles_to_rm[i]) = -1;
+					_particle_list.getProp<id>(particles_to_rm[i]) = DELETE_ID;
 					// Update the particle list (this is on each proccesor)
 					test_num--	;
 
@@ -580,7 +582,7 @@ struct FirstOrderReaction
 						// instead use  species = -1 to mark for deleletion !
 						 //_particle_list.remove(_p_key);
 
-						_particle_list.getProp<id>(_p_key) = -1;
+						_particle_list.getProp<id>(_p_key) = DELETE_ID;
 						// Update the list
 						_n_particles[educt]--;
 
@@ -835,8 +837,8 @@ struct SecondOrderReaction
 				 	//_particle_list.remove(_q_key);
 
 				 	// Mark for deletion
-				 	_particle_list.getProp<id>(_p_key) = -1;
-				 	_particle_list.getProp<id>(_q_key) = -1;
+				 	_particle_list.getProp<id>(_p_key) = DELETE_ID;
+				 	_particle_list.getProp<id>(_q_key) = DELETE_ID;
 
 				 	// Update the number of particle list
 					_n_particles[educts[0]]-- ;
@@ -879,7 +881,7 @@ struct SecondOrderReaction
 					_particle_list.getProp<mass>(_p_key) =_species_list[products[0]]->mass;
 
 					// Mark q for deletion
-					_particle_list.getProp<id>(_q_key) = -1;
+					_particle_list.getProp<id>(_q_key) = DELETE_ID;
 
 					// Update the number of particle list
 					_n_particles[educts[0]]-- ;
@@ -1293,7 +1295,7 @@ struct Reactions
 		int s_q = _particle_list.getProp<id>(_q_key);
 		int s_p = _particle_list.getProp<id>(_p_key);
 		int reaction_key;
-		// Do not react with deleted particles id == -1
+		// Do not react with deleted particles id < 0
 		if (s_q >= 0 && s_p >= 0)
 		{
 			//Make the problem sysmetric

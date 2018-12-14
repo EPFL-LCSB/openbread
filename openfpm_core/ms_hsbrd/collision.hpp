@@ -10,6 +10,7 @@
 #include "Decomposition/CartDecomposition.hpp"
 #include "VCluster/VCluster.hpp"
 #include "Packer_Unpacker/Packer_util.hpp"
+#include "additional_operators.hpp"
 
 #include <cstdlib>
 #include <list>
@@ -271,6 +272,11 @@ struct Collisions
 		}
 
 		//std::cout << "Coll distance (init)" << coll_it->dist << std::endl;
+		// Overwrite the real particle if ghost reacted
+        if (is_reacted) {
+            _particle_list.ghost_put<delete_parent_, id >();
+        }
+
 
 		// Check the rest of the collisions
 
@@ -278,7 +284,8 @@ struct Collisions
 		// Itterate over all collision
 		while(coll_it != coll_list.end())
 		{
-
+		    // Ensure communication before making collision
+            _particle_list.ghost_get<>();
 			// Collision will be seen with in the Domain as double > skip the collision
 			// when it was done before!
 
@@ -322,7 +329,11 @@ struct Collisions
 			{
 				succes = hardSphereCollision(_particle_list,q_key,p_key,_dt);
 			}
+			// Overwrite the real particle if gohst collided
 
+			if (is_reacted) {
+			    _particle_list.ghost_put<delete_parent_, id >();
+			}
 
 			++coll_it;
 		}

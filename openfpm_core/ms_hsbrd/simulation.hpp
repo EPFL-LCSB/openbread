@@ -10,7 +10,6 @@
 #include "particles.hpp"
 #include "reaction.hpp"
 #include "collision.hpp"
-#include "additional_operators.hpp"
 
 
  #ifndef SIMULATION_H
@@ -281,8 +280,8 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
                              uniform_distributed_random_number,
                              is_hardsphere,
                              _is_reactive);
-    // Overwrite ghosts and update
-	particle_list->ghost_put<replace_if_collsion_>();
+
+    // Map and get neughbours
     particle_list->map();
     particle_list->ghost_get<>();
     particle_list->updateCellListSym(nearest_neighbours);
