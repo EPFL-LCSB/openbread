@@ -41,11 +41,22 @@ a bug fix for shared libraries:
 
 make install
 
-Note that correct include and library paths need to be added:
+Note that correct include and library paths need to be added. Be aware to specify your python version for the
+PYTHON_INCLUDE path:
 
 .. code:: bash
+    cp /path/to/openfpm/ ~/example.mk
     source /openfpm_install_dir/openfpm_vars
+    export PYTHON_INCLUDE=$PYTHON_ROOT/include/python3.xm
 
+The package can then be installed using the distutils:
+.. code:: bash
+    pip install -e /path/to/openbread
+
+
+
+The soucre based install of openbread was only tested in Linux based environments. Platform compatibility is achieved
+using the container-based install.
 
 .. |OPENFPM| replace:: ``openfpm``
 .. _OPENFPM: http://openfpm.mpi-cbg.de/install_from_source#intro-wrapper
