@@ -10,7 +10,6 @@
 #include "Decomposition/CartDecomposition.hpp"
 #include "VCluster/VCluster.hpp"
 #include "Packer_Unpacker/Packer_util.hpp"
-#include "additional_operators.hpp"
 
 #include <cstdlib>
 #include <list>
@@ -242,6 +241,7 @@ struct Collisions
 		//std::cout << "Sorted" << std::endl;
 
 		bool succes;
+		bool is_reacted = false;
 
 		// Init an id vector iterator
 		//std::vector<coll>::iterator coll_it;
@@ -254,28 +254,33 @@ struct Collisions
 		double dist = coll_it->dist;
 
 
-		// Allways do the first collision
-		// Set collision flg for both particles
-		_particle_list.getProp<collision_flg>(q_key) = true;
-		_particle_list.getProp<collision_flg>(p_key) = true;
+	    if( !( _particle_list.getProp<id>(q_key) < 0) and
+		    !( _particle_list.getProp<id>(q_key) < 0)  )
+		 {
 
-		//Log hypothetical bimolcular reactions
-		bool is_reacted = false;
-		if(is_reactive)
-		{
-			is_reacted = all_reactions->react_second_order(_particle_list, _NN, p_key, q_key, _dt ,_mt_rng, _uniform_rnd);
-		}
-		// Make HS collision
-		if(is_hs_collision  && !is_reacted)
-		{
-			succes = hardSphereCollision(_particle_list,q_key,p_key,_dt);
-		}
+            // Allways do the first collision if allowed
+            // Set collision flg for both particles
+            _particle_list.getProp<collision_flg>(q_key) = true;
+            _particle_list.getProp<collision_flg>(p_key) = true;
 
-		//std::cout << "Coll distance (init)" << coll_it->dist << std::endl;
-		// Overwrite the real particle if ghost reacted
-        if (is_reacted) {
-            _particle_list.ghost_put<delete_parent_, id >();
-        }
+            //Log hypothetical bimolcular reactions
+
+            if(is_reactive)
+            {
+                is_reacted = all_reactions->react_second_order(_particle_list, _NN, p_key, q_key, _dt ,_mt_rng, _uniform_rnd);
+            }
+            // Make HS collision
+            if(is_hs_collision  && !is_reacted)
+            {
+                succes = hardSphereCollision(_particle_list,q_key,p_key,_dt);
+            }
+
+            //std::cout << "Coll distance (init)" << coll_it->dist << std::endl;
+            // Overwrite the real particle if ghost reacted
+
+            ++coll_it;
+
+         }
 
 
 		// Check the rest of the collisions
@@ -284,12 +289,11 @@ struct Collisions
 		// Itterate over all collision
 		while(coll_it != coll_list.end())
 		{
-		    // Ensure communication before making collision
-            _particle_list.ghost_get<>();
 			// Collision will be seen with in the Domain as double > skip the collision
 			// when it was done before!
+			_particle_list.template ghost_get<>();
 
-			if(  coll_it->dist == dist or
+			if(  coll_it->dist <= dist or
 			  ( _particle_list.getProp<id>(coll_it->key_q) < 0) or
 			  ( _particle_list.getProp<id>(coll_it->key_p) < 0)  )
 
@@ -332,7 +336,8 @@ struct Collisions
 			// Overwrite the real particle if gohst collided
 
 			if (is_reacted) {
-			    _particle_list.ghost_put<delete_parent_, id >();
+
+
 			}
 
 			++coll_it;

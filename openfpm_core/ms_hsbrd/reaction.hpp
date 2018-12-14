@@ -21,7 +21,7 @@
 
 // Dependencies
 #include "Space/SpaceBox.hpp"
-
+#include "additional_operators.hpp"
 #include "particles.hpp"
 #include "geometry.hpp"
 
@@ -598,26 +598,19 @@ struct FirstOrderReaction
 					// For product list lengt == 1
 					case 1:
 					{
-						// Change the proprties of the particle
-						_particle_list.getProp<id>(_p_key) = _species_list[products[0]]->id;
-						_particle_list.getProp<radius>(_p_key) = _species_list[products[0]]->radius;
-						_particle_list.getProp<diffusion>(_p_key) = _species_list[products[0]]->diff;
-						_particle_list.getProp<mass>(_p_key) =_species_list[products[0]]->mass;
+						// Delete the particle
+						_particle_list.getProp<id>(_p_key) = DELETE_ID;
+						_particle_list.ghost_put<delete_parent_, id >();
 
-						// for (size_t i = 0 ; i < DOMAIN_DIM ; i++){
-						// 	double dx = sqrt2Ddt*rd_normal(mt_rgn);
-						// 	// Set pos0 as the position before the displacement
-						// 	_particle_list.getProp<pos0>(_p_key)[i] = _particle_list.getPos(_p_key)[i];
-						// 	// Displace the particle
-						// 	_particle_list.getPos(_p_key)[i] += dx;
-						// 	// Assign the velocity
-						// 	_particle_list.getProp<velocity>(_p_key)[i] = dx/_dt;
-						// }
+                        Point<3,double> pos_0 = _particle_list.getPos(_p_key);
+                        add_particle_pos( _particle_list , *_species_list[products[0]] , pos_0 );
+
 
 						// Update the number of particle list
 						_n_particles[educt]-- ;
 						_n_particles[products[0]]++ ;
 
+					       
 
 						// Debugging time
 						//std::cout <<  "1st order Reaction" << std::endl;
@@ -651,18 +644,11 @@ struct FirstOrderReaction
 						// Check collsion
 						if (test_collision_reacions(_particle_list, _NN, _p_key, pos_2, radius_2)){return false;}
 
-						// Change the proprties of the particle reacting to product[0]
-						_particle_list.getProp<id>(_p_key) = _species_list[products[0]]->id;
-						_particle_list.getProp<radius>(_p_key) = _species_list[products[0]]->radius;
-						_particle_list.getProp<diffusion>(_p_key) = _species_list[products[0]]->diff;
-						_particle_list.getProp<mass>(_p_key) =_species_list[products[0]]->mass;
+						// Delete the particle
+						_particle_list.getProp<id>(_p_key) = DELETE_ID;
 
-						// Optimized directly done in propagte
-						for (size_t i = 0 ; i < DOMAIN_DIM ; i++){
-							_particle_list.getPos(_p_key)[i] = pos_1[i];
-						}
-
-						// Add a particle for the product[1]
+                        // Add two new ones
+						add_particle_pos( _particle_list , *_species_list[products[0]] , pos_1 );
 						add_particle_pos( _particle_list , *_species_list[products[1]] , pos_2 );
 
 						// Update the number of particle list
@@ -805,7 +791,7 @@ struct SecondOrderReaction
 		// Does a reaction occur acc. to the microrate law?
 		if( (_r_i <= p_i) or (reaction_rate == -1) )
 			{
-
+			  _particle_list.template ghost_get<>();
 			// std::cout <<  "2nd order Reaction " <<  std::endl;
 			// std::cout <<  "R " << R <<  std::endl;
 			// std::cout <<  "sig " << sig <<  std::endl;
@@ -835,10 +821,14 @@ struct SecondOrderReaction
 
 				 	//_particle_list.remove(_p_key);
 				 	//_particle_list.remove(_q_key);
-
+				  
 				 	// Mark for deletion
 				 	_particle_list.getProp<id>(_p_key) = DELETE_ID;
 				 	_particle_list.getProp<id>(_q_key) = DELETE_ID;
+					
+					  
+					 _particle_list.ghost_put<delete_parent_, id >();
+					 
 
 				 	// Update the number of particle list
 					_n_particles[educts[0]]-- ;
@@ -867,22 +857,16 @@ struct SecondOrderReaction
 					double m_q = _particle_list.getProp<mass>(_q_key);
 
 					// Calculation of the COM of the educts
-				  Point<DOMAIN_DIM,double> pos_0 = (pos_0_p*m_p + pos_0_q*m_q )/(m_p+m_q);
+				    Point<DOMAIN_DIM,double> pos_0 = (pos_0_p*m_p + pos_0_q*m_q )/(m_p+m_q);
 
-					// Update the position of p to the COM
-					for (size_t i = 0 ; i < DOMAIN_DIM ; i++){
-						_particle_list.getPos(_p_key)[i] = pos_0[i];
-					}
-
-					// Change the proprties of the particle p to match the educt
-					_particle_list.getProp<id>(_p_key) = _species_list[products[0]]->id;
-					_particle_list.getProp<radius>(_p_key) = _species_list[products[0]]->radius;
-					_particle_list.getProp<diffusion>(_p_key) = _species_list[products[0]]->diff;
-					_particle_list.getProp<mass>(_p_key) =_species_list[products[0]]->mass;
-
-					// Mark q for deletion
+					// Mark q and pfor deletion
+					_particle_list.getProp<id>(_p_key) = DELETE_ID;
 					_particle_list.getProp<id>(_q_key) = DELETE_ID;
-
+					_particle_list.ghost_put<delete_parent_, id >();
+					
+					add_particle_pos( _particle_list , *_species_list[products[0]] , pos_0 );
+                                        
+					
 					// Update the number of particle list
 					_n_particles[educts[0]]-- ;
 					_n_particles[educts[1]]-- ;
@@ -928,32 +912,20 @@ struct SecondOrderReaction
 						{return false;}
 
 					Point<3,double> pos_2 = pos_0 + u_vec * mass_2/(mass_1+mass_2) * sigma;
-					double radius_2 = _species_list[products[0]]->radius;
+					double radius_2 = _species_list[products[1]]->radius;
 					// Check collsion
 					if (test_collision_reacions(_particle_list, _NN, _p_key, pos_1, radius_1))
 						{return false;}
 
-					// Only change the proterties of both particles to match their traget products
+					// Mark q and pfor deletion
+					_particle_list.getProp<id>(_p_key) = DELETE_ID;
+					_particle_list.getProp<id>(_q_key) = DELETE_ID;
 
-					// Change the proprties of the particle reacting to product[0]
-					_particle_list.getProp<id>(_p_key) = _species_list[products[0]]->id;
-					_particle_list.getProp<radius>(_p_key) = _species_list[products[0]]->radius;
-					_particle_list.getProp<diffusion>(_p_key) = _species_list[products[0]]->diff;
-					_particle_list.getProp<mass>(_p_key) =_species_list[products[0]]->mass;
-
-					for (size_t i = 0 ; i < DOMAIN_DIM ; i++){
-						_particle_list.getPos(_p_key)[i] = pos_1[i];
-					}
-
-					// Change the proprties of the particle reacting to product[1]
-					_particle_list.getProp<id>(_q_key) = _species_list[products[1]]->id;
-					_particle_list.getProp<radius>(_q_key) = _species_list[products[1]]->radius;
-					_particle_list.getProp<diffusion>(_q_key) = _species_list[products[1]]->diff;
-					_particle_list.getProp<mass>(_q_key) =_species_list[products[1]]->mass;
-
-					for (size_t i = 0 ; i < DOMAIN_DIM ; i++){
-						_particle_list.getPos(_q_key)[i] = pos_2[i];
-					}
+					_particle_list.ghost_put<delete_parent_, id >();
+                                        
+					
+					add_particle_pos( _particle_list , *_species_list[products[0]] , pos_1 );
+					add_particle_pos( _particle_list , *_species_list[products[1]] , pos_0 );
 
 
 					// Update the delta number of particle list
