@@ -68,6 +68,7 @@ sim = openbread.HSBRDSimulation(species,
                                 simulation_space,
                                 1,
                                 True,
-                                100)
+                                100,
+                                True)
 
 results = sim.simulate(1e-9,1e-8,1)
