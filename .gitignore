@@ -1,6 +1,5 @@
 # Pycharm folders
 .idea/*
-cobra_docker/work/.idea/*
 
 # Results
 *.html
@@ -10,6 +9,10 @@ cobra_docker/work/.idea/*
 *.csv
 *.svg
 *.pdf
+
+# build files
+openfpm_core/openfpm_core.py
+openfpm_core/openfpm_core_wrap.cxx
 
 ###########################################
 ###	Standard C++	.gitignore	###
