@@ -48,7 +48,7 @@ def test_model_build():
 
 
     # Rate constant
-    k = 1e12
+    k = 1e9
 
 
     # Setup particle simulation environemnt

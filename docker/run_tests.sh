@@ -1,6 +1,5 @@
 #!/bin/sh
 chmod -R u+X .
 docker run --rm \
-        -v $(pwd)/..:/openbread \
         openbread_docker_ci 	\
-        bash -c "cd /openbread && py.test"
+        bash -c " source /home/user/openfpm_vars && cd /openbread && py.test"

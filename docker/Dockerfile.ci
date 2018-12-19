@@ -6,5 +6,5 @@ COPY . /openbread
 RUN chown user /openbread
 USER user
 RUN pip install --user pytest-cov
-RUN pip install --user -e /openbread
+RUN /bin/bash -c "source /home/user/openfpm_vars && pip install --user -e /openbread"
 CMD /bin/bash
