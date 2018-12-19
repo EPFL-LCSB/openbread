@@ -35,7 +35,6 @@ COPY requirements.txt .
 
 USER root
 
-
 # Make an alias
 RUN ln -s /usr/bin/python3 python
 RUN pip3 install --upgrade pip

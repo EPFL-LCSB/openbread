@@ -1,0 +1,23 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+python:
+  - "3.5"
+branches:
+ only:
+ #- master
+ #- dev
+ - ci
+
+before_install:
+ - docker pull danielweilandt/openbread_docker
+ - docker build -t openbread_docker_ci -f docker/Dockerfile.ci .
+
+script:
+ - bash ./docker/run_tests.sh
+
+after_success:
+- pip install codecov; codecov;
