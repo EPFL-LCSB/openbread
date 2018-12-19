@@ -8,7 +8,7 @@ Requirements
 ------------
 
 This module was developed in Python 3.5, and it is recommended to run Python 3.5.
-The module also was tested in Python 3.6. 
+The module also was tested in Python 3.6.
 
 This module requires |OPENFPM|_ to work properly.
 

@@ -4,14 +4,13 @@ This Docker offers a suitable environment to run openbread.
 
 ## Requirements
 
-Make sure [docker](https://www.docker.com/) is installed.
+Make sure [docker](https://www.docker.com/) is installed and running before entering the commands below.
 
 ## Running the Docker
+You can download a ready build docker image from dockerhub and direclty run it:  
 
-First, build the container with `build.bat` or `. build`.
-Then start the container with `run.bat` or `. run`.
 ```bash
-. build
+docker pull danielweilandt/openbread_docker:latest
 . run
 ```
 
@@ -29,6 +28,16 @@ run tutorial_openbread.py
 
 result
 ```
+
+## Building the Docker
+
+First, build the container with `build.bat` or `. build`.
+Then start the container with `run.bat` or `. run`.
+```bash
+. build
+. run
+```
+
 
 ## Additional information
 
