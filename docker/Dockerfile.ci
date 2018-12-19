@@ -3,6 +3,7 @@ ENTRYPOINT []
 USER root
 RUN mkdir /openbread
 COPY . /openbread
+RUN chown user /openbread
 USER user
 RUN pip install --user pytest-cov
 RUN pip install --user -e /openbread
