@@ -5,5 +5,5 @@ RUN mkdir /openbread
 COPY . /openbread
 USER user
 RUN pip install --user pytest-cov
-RUN pip install --user --global-option=build_ext /openbread
+RUN pip install --user -e /openbread
 CMD /bin/bash
