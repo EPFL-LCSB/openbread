@@ -3,4 +3,4 @@ chmod -R u+X .
 docker run --rm \
         -v $(pwd)/..:/openbread \
         openbread_docker_ci 	\
-        bash -c "py.test"
+        bash -c "cd /openbread && py.test"
