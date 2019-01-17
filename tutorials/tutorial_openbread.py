@@ -86,12 +86,13 @@ particle_model.initial_conditions['g2p'] = 50e-6
 
 
 
-result = particle_model.simulate(   dt=1e-9,
+result = particle_model.simulate(   dt=0.25e-9,
                                     max_time=1e-7,
                                     log_step=10,
                                     random_seed=1,
                                     is_hardsphere=True,
                                     is_constant_state=False,
+                                    is_reactive=False,
                                     t_equlibriate=0.0)
 
 

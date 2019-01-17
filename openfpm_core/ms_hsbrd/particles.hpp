@@ -37,6 +37,9 @@ constexpr int force = 6;
 // Identifier for the corract reaplce
 constexpr int collision_flg = 7;
 
+//Mesurements
+constexpr int displacement = 8;
+
 const size_t DOMAIN_DIM = 3;
 
 // Redefinition of the type particle list
@@ -45,7 +48,8 @@ typedef vector_dist<DOMAIN_DIM,double,
 										double[DOMAIN_DIM],
 										double[DOMAIN_DIM],
 										double[DOMAIN_DIM],
-										bool> > td_particle_list;
+										bool,
+										double[DOMAIN_DIM]> > td_particle_list;
 
 
 
@@ -181,6 +185,7 @@ struct Crowding
 		{
 			_particle_list.template getLastProp<pos0>()[i] = 0.0;
 			_particle_list.template getLastProp<velocity>()[i] = 0.0;
+			_particle_list.template getLastProp<displacement>()[i] = 0.0;
 		}
 
 		_particle_list.template getLastProp<id>() = crwd_id;
@@ -189,7 +194,6 @@ struct Crowding
 		_particle_list.template getLastProp<mass>() = m_rnd;
 
 		_particle_list.template getLastProp<collision_flg>() = false;
-
 
 		// Output is the contribution to volume fraction of this particle
 		return phi;
@@ -283,6 +287,7 @@ void add_n_particles_no_check(td_particle_list & _particle_list,
 		{
 			_particle_list.template getLastProp<pos0>()[i] = 0.0;
 			_particle_list.template getLastProp<velocity>()[i] = 0.0;
+			_particle_list.template getLastProp<displacement>()[i] = 0.0;
 		}
 
 		_particle_list.template getLastProp<id>() = _species.id;
@@ -372,6 +377,7 @@ void add_particle_pos(td_particle_list & _particle_list,
 		_particle_list.getLastPos()[i]  = _position[i];
 		_particle_list.template getLastProp<pos0>()[i] = 0.0;
 		_particle_list.template getLastProp<velocity>()[i] = 0.0;
+		_particle_list.template getLastProp<displacement>()[i] = 0.0;
 	}
 
 }
