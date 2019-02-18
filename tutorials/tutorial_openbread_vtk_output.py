@@ -93,7 +93,7 @@ result = particle_model.simulate(   dt=0.25e-9,
                                     is_hardsphere=True,
                                     is_constant_state=False,
                                     is_reactive=False,
-                                    vtk_output='output/output', 
+                                    vtk_output='output/output',
                                     t_equlibriate=0.0)
 
 
