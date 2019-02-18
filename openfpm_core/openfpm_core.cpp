@@ -56,9 +56,13 @@ td_result HSBRDSimulation::log()
 }
 
 // Run simulation with delta t until t_max and log every t_log
-td_results HSBRDSimulation::simulate(double delta_t, double t_max, int i_log, bool is_reactive = true)
+td_results HSBRDSimulation::simulate(double delta_t,
+                                     double t_max,
+                                     int i_log,
+                                     std::string output = "",
+                                     bool is_reactive = true)
 {
-    td_results results = _simulator->simulate(delta_t,t_max,i_log, is_reactive);
+    td_results results = _simulator->simulate(delta_t,t_max,i_log,output,is_reactive);
     // Deconstruct itself
     return results;
 }

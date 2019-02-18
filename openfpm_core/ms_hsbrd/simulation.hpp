@@ -107,7 +107,9 @@ public:
     virtual td_results simulate( double delta_t,
                                  double t_max,
                                  int i_log,
+                                 std::string output,
                                  bool is_reactive);
+
     virtual void equilibrate( double delta_t,
                               double t_max );
 
@@ -376,6 +378,7 @@ td_result Simulator::log()
 td_results Simulator::simulate( double delta_t,
                                 double t_max,
                                 int i_log,
+                                std::string output = "",
                                 bool is_reactive = true)
 {
     td_results results;
@@ -397,6 +400,12 @@ td_results Simulator::simulate( double delta_t,
             log_time[0]=time;
             result["time"] = log_time;
             results.push_back(result);
+
+            // Write simulation output
+            if (~output.empty() )
+            {
+                particle_list->write_frame(output,i);
+            }
         }
 
     }
