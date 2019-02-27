@@ -255,7 +255,7 @@ struct Collisions
 
 
 	    if( !( _particle_list.getProp<id>(q_key) < 0) and
-		    !( _particle_list.getProp<id>(q_key) < 0)  )
+		    !( _particle_list.getProp<id>(p_key) < 0)  )
 		 {
 
             // Allways do the first collision if allowed
