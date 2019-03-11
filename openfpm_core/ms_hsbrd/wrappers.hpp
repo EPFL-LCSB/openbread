@@ -95,7 +95,7 @@ void wrap_reactions(Reactions* _reactions, td_reaction_wrapper reactions_dict)
 			}
 			else if(rates.size() == 1){
 				double rate_constant = rates[0];
-				_reactions->add_zeroth_order_reaction(int_product,rate_constant,0);
+				_reactions->add_zeroth_order_reaction(int_product,rate_constant,-1);
 			}
 		}
 
