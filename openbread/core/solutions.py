@@ -82,6 +82,13 @@ class ParticleModelSolution(object):
          self.species[this_species_name] = [result['species'][this_key] \
                                                for result in results ]
 
+      self.mean_squared_disp = OrderedDict([])
+      for this_key in results[0]["species"].keys():
+         this_species_name = species_dict[this_key]
+         self.mean_squared_disp[this_species_name] = [result['sq_disp'][this_key] \
+                                                      / result['species'][this_key] \
+                                                      if result['species'][this_key]  > 0 else 0.0 \
+                                                      for result in results]
 
       self.collisions = OrderedDict([])
       for this_key,this_reaction_name in collison_dict.items():

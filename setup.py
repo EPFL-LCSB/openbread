@@ -32,8 +32,18 @@ from distutils.command.build_ext import build_ext as _build_ext
 
 class build_ext(_build_ext):
     def run(self):
-        subprocess.call(['make', 'clean', '-C', 'openfpm_core'])
-        subprocess.call(['make', '-C', 'openfpm_core'])
+
+        subprocess.call(['make', 'clean', '-C', 'openfpm_core'],)
+        subprocess.call(['ls','openfpm_core'], )
+
+        try:
+            subprocess.check_output('make -C openfpm_core',
+                                    stderr=subprocess.STDOUT,
+                                    shell=True)
+        except subprocess.CalledProcessError as inst:
+
+            raise RuntimeError("CMD: {} failed with error {}".format(inst.cmd,inst.output))
+
         _build_ext.run(self)
 
 

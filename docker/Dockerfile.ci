@@ -3,7 +3,8 @@ ENTRYPOINT []
 USER root
 RUN mkdir /openbread
 COPY . /openbread
-USER user
+RUN chown -R user /openbread
+User user
 RUN pip install --user pytest-cov
-RUN pip install --user /openbread
+RUN /bin/bash -c "source /home/user/openfpm_vars && pip install --user -e /openbread"
 CMD /bin/bash

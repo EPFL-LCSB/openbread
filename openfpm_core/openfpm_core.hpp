@@ -46,7 +46,9 @@ public:
     td_result log();
     td_results simulate(double delta_t,
                         double t_max,
-                        int i_log);
+                        int i_log,
+                        std::string output,
+                        bool is_reactive);
     void equilibrate(  double delta_t,
                        double t_max);
 

@@ -122,6 +122,8 @@ class ParticleModel(object):
                  is_hardsphere=True,
                  n_sample=10,
                  is_constant_state=True,
+                 is_reactive=True,
+                 vtk_output = '',
                  t_equlibriate=0):
       """
       Simulate the particle model and return reults
@@ -173,7 +175,7 @@ class ParticleModel(object):
       if not is_constant_state:
          sim.equilibrate(dt,t_equlibriate)
 
-      results = sim.simulate(dt,max_time,log_step)
+      results = sim.simulate(dt, max_time, log_step, vtk_output, is_reactive)
 
       particle_solution = ParticleModelSolution(results,
                                                 self._reactions,

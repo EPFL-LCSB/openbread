@@ -87,6 +87,9 @@ public:
     std::map<int,double> species_number;
     std::map<int,double> species_number_prev;
 
+    // log sq displacement
+    std::map<int,double> sum_sq_displacement;
+
     Simulator();
     Simulator(  SpeciesList *in_species_list,
                 InitialConditions *in_initial_conditions,
@@ -102,8 +105,11 @@ public:
     virtual void step(double delta_t, bool is_reactive );
     virtual td_result log();
     virtual td_results simulate( double delta_t,
-                                           double t_max,
-                                           int i_log );
+                                 double t_max,
+                                 int i_log,
+                                 std::string output,
+                                 bool is_reactive);
+
     virtual void equilibrate( double delta_t,
                               double t_max );
 
@@ -194,6 +200,14 @@ Simulator::Simulator( SpeciesList *in_species_list,
         species_number_prev[this_id] += 1.0;
         ++it5;
     }
+    // Init species numbers
+    for(SpeciesList::iterator it_species = species_list->begin() ;
+                             it_species != species_list->end() ;
+                             it_species++)
+    {
+        sum_sq_displacement[(*it_species)->id] = 0;
+
+    }
 
 
 }
@@ -240,15 +254,15 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
     while(it1.isNext())
       {
 	
-	auto particle = it1.get();
+	    auto particle = it1.get();
 
         particle_list->getProp<collision_flg>(particle.getKey()) = false;
 
-	propagate_particles(*particle_list,
-                            particle.getKey(),
-                            delta_t,
-                            random_number_generator,
-                            normal_distributed_random_number);
+	    propagate_particles(*particle_list,
+                                particle.getKey(),
+                                delta_t,
+                                random_number_generator,
+                                normal_distributed_random_number);
         ++it1;
 
       }
@@ -299,12 +313,14 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
 
     openfpm::vector<size_t> particles_to_delete;
 
+    // Reset species state
     for(SpeciesList::iterator it_species = species_list->begin() ;
                              it_species != species_list->end() ;
                              it_species++)
     {
         species_number_prev[(*it_species)->id] = species_number[(*it_species)->id];
         species_number[(*it_species)->id] = 0;
+        sum_sq_displacement[(*it_species)->id] = 0;
 
     }
     auto it5 = particle_list->getDomainIterator();
@@ -322,9 +338,22 @@ void Simulator::step(double delta_t, bool _is_reactive = true)
         }
         else
         {
+            // Count species
             int this_id = particle_list->getProp<id>(p.getKey());
             species_number[this_id] += 1.0;
-        }
+            // Count displacement
+            for( int i = 0; i < 3 ; i++)
+            {
+                auto delta_disp = particle_list->getPos(p.getKey())[i] - particle_list->getProp<pos0>(p.getKey())[i];
+                particle_list->getProp<displacement>(p.getKey())[i] += delta_disp;
+            }
+
+            // Squared displacement per species
+            Point<3,double> disp = particle_list->getProp<displacement>(p.getKey());
+            double norm2_disp = norm2(disp);
+            sum_sq_displacement[this_id] += norm2_disp;
+
+         }
 
         ++it5;
     }
@@ -341,20 +370,23 @@ td_result Simulator::log()
     result["species"]   = species_number;
     result["acceptance"] = reactions->log_acceptance(*virtual_cluster,species_number_prev);
     result["collisions"] = reactions->log_collisions(*virtual_cluster);
+    result["sq_disp"]    = sum_sq_displacement;
 
     return result;
 }
 
 td_results Simulator::simulate( double delta_t,
                                 double t_max,
-                                int i_log)
+                                int i_log,
+                                std::string output = "",
+                                bool is_reactive = true)
 {
     td_results results;
 
     for (size_t i = 1; i < t_max/delta_t ; i++)
     {
         time = i*delta_t;
-        step(delta_t,true);
+        step(delta_t,is_reactive);
 
         // Reorder particle list for chache friendlyness
         if (i % int(5e2) == 0)
@@ -368,6 +400,12 @@ td_results Simulator::simulate( double delta_t,
             log_time[0]=time;
             result["time"] = log_time;
             results.push_back(result);
+
+            // Write simulation output
+            if (~output.empty() )
+            {
+                particle_list->write_frame(output,i);
+            }
         }
 
     }
