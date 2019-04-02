@@ -1,6 +1,8 @@
 openbread
 =========
 
+|license| |Build Status|
+
 A python 3 implementation of OPENFPM based brownian reaction dynamics.
 
 
@@ -133,3 +135,14 @@ License
 
 The software in this repository is put under an APACHE-2.0 licensing scheme - please see the
 `LICENSE <https://github.com/EPFL-LCSB/openbread/blob/master/LICENSE.txt>`_ file for more details
+
+
+
+.. |license| image:: http://img.shields.io/badge/license-APACHE2-blue.svg
+   :target: https://github.com/EPFL-LCSB/openbread/blob/master/LICENSE.txt
+   
+.. |Build Status| image:: https://travis-ci.org/EPFL-LCSB/openbread.svg?branch=master
+   :target: https://travis-ci.org/EPFL-LCSB/openbread
+   
+   
+
