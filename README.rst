@@ -1,7 +1,7 @@
 openbread
 =========
 
-|license| |Build Status|
+|Build Status| |Codacy branch grade| |license|
 
 A python 3 implementation of OPENFPM based brownian reaction dynamics.
 
@@ -151,6 +151,9 @@ The software in this repository is put under an APACHE-2.0 licensing scheme - pl
    
 .. |Build Status| image:: https://travis-ci.org/EPFL-LCSB/openbread.svg?branch=master
    :target: https://travis-ci.org/EPFL-LCSB/openbread
+   
+.. |Codacy branch grade| image:: https://img.shields.io/codacy/grade/a914add308be46418e4e1ecc9d197317/master.svg
+   :target: https://www.codacy.com/app/realLCSB/openbread
    
    
 
