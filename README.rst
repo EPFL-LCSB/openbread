@@ -67,6 +67,12 @@ This module requires |OPENFPM|_ to work properly.
 .. |OPENFPM| replace:: ``OPENFPM``
 .. _OPENFPM: http://openfpm.mpi-cbg.de/install_from_source#intro-wrapper
 
+Further the following pip-python packages are required
+    - sympy >= 1.1.
+    - pytest
+    - scipy
+    - numpy
+    - dill
 
 Quick start
 ===========
