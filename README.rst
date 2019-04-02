@@ -6,17 +6,6 @@ openbread
 A python 3 implementation of OPENFPM based brownian reaction dynamics.
 
 
-Requirements
-------------
-
-This module was developed in Python 3.5, and it is recommended to run Python 3.5.
-The module also was tested in Python 3.6.
-
-This module requires |OPENFPM|_ to work properly.
-
-.. |OPENFPM| replace:: ``OPENFPM``
-.. _OPENFPM: http://openfpm.mpi-cbg.de/install_from_source#intro-wrapper
-
 Container-based install
 -----------------------
 
@@ -31,8 +20,10 @@ See |docker|_ page for the setup and use of the container.
 .. |here| replace:: ``here``
 .. _here: https://www.docker.com/`
 
+
 Source-based install
 -----------------------
+
 
 For a source based it is necessary to install |OPENFPM|_ with CXXFLAGS=-fPIC CFLAGS=-fPIC.
 We recommend to use our fork of the openfpm package that is using openmpi 3.0.0. If  |OPENFPM|_ is compiled with
@@ -64,6 +55,17 @@ The package can then be installed using the distutils:
 The source-based install of openbread was only tested in Linux based environments. Platform compatibility is achieved
 using the container-based install.
 
+
+Requirements
+------------
+
+This module was developed in Python 3.5, and it is recommended to run Python 3.5.
+The module also was tested in Python 3.6.
+
+This module requires |OPENFPM|_ to work properly.
+
+.. |OPENFPM| replace:: ``OPENFPM``
+.. _OPENFPM: http://openfpm.mpi-cbg.de/install_from_source#intro-wrapper
 
 
 Quick start
